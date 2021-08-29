@@ -3,11 +3,12 @@ package ru.devray.day13.collaboratedtesting.bulkashmak;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 
 public class EtfList {
 
@@ -60,8 +61,23 @@ public class EtfList {
                 .assertThat()
                 .statusCode(200)
                 .and()
-                .body("symbol", notNullValue());
+                .body(Matchers.notNullValue());
     }
 
+//    Test that "name" of first array element in response is "SPY"
+    @Test
+    void testNameOfFirstElementIsSpy() {
 
+        given()
+                .spec(spec)
+                .log().uri()
+
+                .when().get()
+
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body("symbol[0]", Is.is("SPY"));
+    }
 }
