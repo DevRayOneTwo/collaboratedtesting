@@ -3,10 +3,14 @@ package ru.devray.day13.collaboratedtesting.bulkashmak;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.Matchers;
+import static org.hamcrest.Matchers.*;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -61,7 +65,7 @@ public class EtfList {
                 .assertThat()
                 .statusCode(200)
                 .and()
-                .body(Matchers.notNullValue());
+                .body(notNullValue());
     }
 
 //    Test that "name" of first array element in response is "SPY"
@@ -80,4 +84,23 @@ public class EtfList {
                 .and()
                 .body("symbol[0]", Is.is("SPY"));
     }
+
+//    Test that "exchange" of second array element in response contains a substr "New York Stock"
+    @Test
+    void testExchangeValueOfSecondElementContains() {
+
+        given()
+                .spec(spec)
+                .log().uri()
+
+                .when().get()
+
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body("exchange[1]", containsString("New York Stock"));
+    }
+
+
 }
