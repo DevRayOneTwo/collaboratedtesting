@@ -102,5 +102,28 @@ public class EtfList {
                 .body("exchange[1]", containsString("New York Stock"));
     }
 
+//    Test that "jsonValue" of array element with an index "index" contains "name"
+    @ParameterizedTest
+    @MethodSource("dataProvider")
+    void test(String jsonValue, String index, String name) {
 
+        given()
+                .spec(spec)
+                .log().uri()
+
+                .when().get()
+
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and()
+                .body(String.format("%s[%s]",jsonValue, index), containsString(name));
+    }
+
+    public static List<String[]> dataProvider(){
+        String[] strings1 = new String[]{"name", "0", "SPDR S&P 500 ETF Trust"};
+        String[] strings2 = new String[]{"name", "1", "VanEck Vectors Gold Miners ETF"};
+        String[] strings3 = new String[]{"name", "2", "iShares, Inc. - iShares MSCI Emerging Markets ETF"};
+        return List.of(strings1, strings2, strings3);
+    }
 }
