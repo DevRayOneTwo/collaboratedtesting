@@ -7,16 +7,15 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import ru.devray.day13.dto.User;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.given;
 
 public class BDDSerializeTest {
 
     @Test
     public void testWithObjectSerialization(){
+
         String URI = "https://reqres.in";
         String path = "/api/users";
 
@@ -25,11 +24,12 @@ public class BDDSerializeTest {
         Response response = given()
                 .baseUri(URI)
                 .basePath(path).header(new Header("Content-Type", "application/json"))
-                .when()
+                .when().log().all()
                 .get();
 
         JsonPath usersJson = response.jsonPath();
         users = usersJson.getList("data", User.class);
+
 
         users.stream().forEach(System.out::println);
     }
