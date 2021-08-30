@@ -82,27 +82,26 @@ public class EarningsSurprisesTest {
 
     //параметризованный тест на проверку в JSON поля date и symbol
     //подаем один RegEx и разные FMP
-    @ParameterizedTest(name = "#{index} - test {1} with valid regex")
+    @ParameterizedTest(name = "#{index} - test {0} with valid regex")
     @MethodSource("dataProvider")
-    void testValidityDateAndSymbolWithDifferentFMP(String dateReg, String fmp) {
+    void testValidityDateAndSymbolWithDifferentStockName(String stockName) {
         given()
                 .spec(spec)
                 .queryParam("apikey", TOKEN)
                 .when()
-                .get(fmp)
+                .get(stockName)
                 .then()
                 .log().all()
-                .body("[0].date", Matchers.matchesPattern(dateReg))
-                .body("[0].symbol", Matchers.equalTo(fmp));
+                .body("[0].date", Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}"))
+                .body("[0].symbol", Matchers.equalTo(stockName));
     }
 
-    static List<String[]> dataProvider() {
-        String dateReg = "\\d{4}-\\d{2}-\\d{2}";
-        String[] str1 = new String[]{dateReg, "AAPL"};
-        String[] str2 = new String[]{dateReg, "FB"};
-        String[] str3 = new String[]{dateReg, "GOOG"};
-        String[] str4 = new String[]{dateReg, "MSFT"};
-        String[] str5 = new String[]{dateReg, "NVDA"};
+    static List<String> dataProvider() {
+        String str1 = "AAPL";
+        String str2 = "FB";
+        String str3 = "GOOG";
+        String str4 = "MSFT";
+        String str5 = "NVDA";
 
         return List.of(str1, str2, str3, str4, str5);
     }
@@ -110,21 +109,21 @@ public class EarningsSurprisesTest {
     //параметризованный тест на проверку количества объектов
     @ParameterizedTest(name = "#{index} - test with {0}")
     @ValueSource(strings = {"AAPL", "FB", "GOOG", "MSFT", "NVDA"})
-    void testGettingDifferentJSONObjectsAndCheckingLength(String arg) {
+    void testGettingDifferentJSONObjectsAndCheckingLength(String stockName) {
         //не смог придумать как по-другому получить объекты JSON, чтобы не дублировать код =(
         List<EarningsSurprises> list;
         Response response = given()
                 .spec(spec)
                 .queryParam("apikey", TOKEN)
                 .when()
-                .get(arg);
+                .get(stockName);
         list = response.jsonPath().getList("", EarningsSurprises.class);
 
         given()
                 .spec(spec)
                 .queryParam("apikey", TOKEN)
                 .when()
-                .get(arg)
+                .get(stockName)
                 .then()
                 .log().all()
                 .body("size()", Matchers.equalTo(list.size()));
