@@ -14,7 +14,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class EtfList {
+public class TestEtfList {
 
     final static String TOKEN = "883eb2b944916cdc008bb115eefe990b";
     final static String URI = "https://financialmodelingprep.com/api/v3";
@@ -105,7 +105,7 @@ public class EtfList {
 //    Test that "jsonValue" of array element with an index "index" contains "name"
     @ParameterizedTest
     @MethodSource("dataProvider")
-    void test(String jsonValue, String index, String name) {
+    void testValueWithIndexContainsName(String jsonValue, String index, String name) {
 
         given()
                 .spec(spec)
