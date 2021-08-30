@@ -109,7 +109,7 @@ public class EarningsSurprisesTest {
     //параметризованный тест на проверку количества объектов
     @ParameterizedTest(name = "#{index} - test with {0}")
     @ValueSource(strings = {"AAPL", "FB", "GOOG", "MSFT", "NVDA"})
-    void testGettingDifferentJSONObjectsAndCheckingLength(String stockName) {
+    void testGettingDifferentJSONObjectsAndCheckingSize(String stockName) {
         //не смог придумать как по-другому получить объекты JSON, чтобы не дублировать код =(
         List<EarningsSurprises> list;
         Response response = given()
